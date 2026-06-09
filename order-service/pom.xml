@@ -5,12 +5,12 @@
 
     <parent>
         <groupId>com.smartlogix</groupId>
-        <artifactId>smartlogix-platform</artifactId>
+        <artifactId>smartlogix</artifactId>
         <version>1.0.0</version>
     </parent>
 
-    <artifactId>shipment-service</artifactId>
-    <name>shipment-service</name>
+    <artifactId>order-service</artifactId>
+    <name>order-service</name>
 
     <dependencies>
         <dependency>
@@ -30,12 +30,20 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>

@@ -5,7 +5,7 @@
 
     <parent>
         <groupId>com.smartlogix</groupId>
-        <artifactId>smartlogix-platform</artifactId>
+        <artifactId>smartlogix</artifactId>
         <version>1.0.0</version>
     </parent>
 

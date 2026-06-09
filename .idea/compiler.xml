@@ -23,7 +23,7 @@
       <module name="inventory-service" options="-parameters -parameters" />
       <module name="order-service" options="-parameters -parameters" />
       <module name="shipment-service" options="-parameters -parameters" />
-      <module name="smartlogix-platform" options="-parameters" />
+      <module name="smartlogix" options="-parameters" />
     </option>
   </component>
 </project>
