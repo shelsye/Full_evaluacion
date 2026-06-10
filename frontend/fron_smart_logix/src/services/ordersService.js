@@ -1,19 +1,20 @@
-const API_URL = "http://localhost:8080";
+// src/service/orderService.js
+import { fetchWithAuth } from "../api/apiClient";
 
 export async function getOrders() {
-  const token = localStorage.getItem("token");
+  return await fetchWithAuth("/orders", { method: "GET" });
+}
 
-  const response = await fetch(`${API_URL}/api/orders`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+export async function createOrder(orderData) {
+  return await fetchWithAuth("/orders", {
+    method: "POST",
+    body: JSON.stringify(orderData),
   });
+}
 
-  if (!response.ok) {
-    throw new Error("Error al obtener las órdenes");
-  }
-
-  return await response.json();
+// ¡El método que agregamos en el backend de Java!
+export async function deleteOrder(orderNumber) {
+  return await fetchWithAuth(`/orders/${orderNumber}`, {
+    method: "DELETE",
+  });
 }

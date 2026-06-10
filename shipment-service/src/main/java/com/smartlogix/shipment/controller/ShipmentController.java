@@ -6,6 +6,8 @@ import com.smartlogix.shipment.dto.ShipmentResponse;
 import com.smartlogix.shipment.service.ShipmentService;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,5 +47,15 @@ public class ShipmentController {
             @PathVariable String trackingCode,
             @RequestParam ShipmentStatus value) {
         return shipmentService.updateStatus(trackingCode, value);
+    }
+
+    // ==========================================
+    // NUEVO ENDPOINT PARA ELIMINAR (DELETE)
+    // ==========================================
+
+    @DeleteMapping("/{trackingCode}")
+    public ResponseEntity<Void> deleteShipment(@PathVariable String trackingCode) {
+        shipmentService.deleteShipment(trackingCode);
+        return ResponseEntity.noContent().build();
     }
 }

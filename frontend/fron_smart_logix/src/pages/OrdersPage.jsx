@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { getOrders } from "../services/ordersService";
+// IMPORTANTE: Asegúrate de tener deleteOrder exportado en tu ordersService.js
+import { getOrders, deleteOrder } from "../services/ordersService";
 import Navbar from "../components/Navbar";
 import "../App.css";
 
@@ -10,7 +11,7 @@ function OrdersPage() {
   useEffect(() => {
     async function loadOrders() {
       try {
-        // Fuerza una espera mínima de 3 segundos usando Promise.all
+        // Fuerza una espera mínima usando Promise.all
         const [data] = await Promise.all([
           getOrders(),
           new Promise((resolve) => setTimeout(resolve, 1000))
@@ -24,6 +25,20 @@ function OrdersPage() {
     }
     loadOrders();
   }, []);
+
+  // NUEVA FUNCIÓN: Maneja la eliminación de la orden
+  const handleDelete = async (orderNumber) => {
+    if (window.confirm(`¿Estás seguro de eliminar la orden ${orderNumber}?`)) {
+      try {
+        await deleteOrder(orderNumber);
+        // Actualiza el estado local para quitar la orden de la tabla sin recargar la página
+        setOrders(orders.filter((order) => order.orderNumber !== orderNumber));
+      } catch (error) {
+        console.error("Error al eliminar la orden:", error);
+        alert("Hubo un problema al intentar eliminar la orden.");
+      }
+    }
+  };
 
   if (loading) {
     return (
@@ -61,6 +76,8 @@ function OrdersPage() {
               <th>Cliente</th>
               <th>Fecha Creación</th>
               <th>Monto Total</th>
+              {/* NUEVA COLUMNA */}
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -71,6 +88,15 @@ function OrdersPage() {
                 {/* Formateo de fecha limpia localizado en español dd/mm/aaaa */}
                 <td>{order.createdAt ? new Date(order.createdAt).toLocaleDateString("es-ES") : "Reciente"}</td>
                 <td>${order.totalAmount || 0}</td>
+                {/* NUEVO BOTÓN DE ELIMINAR */}
+                <td>
+                  <button
+                    style={{ backgroundColor: "#ff4d4f", color: "white", border: "none", padding: "5px 10px", borderRadius: "4px", cursor: "pointer" }}
+                    onClick={() => handleDelete(order.orderNumber)}
+                  >
+                    Eliminar
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

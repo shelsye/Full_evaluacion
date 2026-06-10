@@ -71,6 +71,20 @@ public class ShipmentService {
         return toResponse(repository.save(shipment));
     }
 
+    // ==========================================
+    // NUEVO MÉTODO PARA COMPLETAR EL CRUD (ELIMINAR)
+    // ==========================================
+
+    public void deleteShipment(String trackingCode) {
+        Shipment shipment = repository.findByTrackingCode(trackingCode.trim().toUpperCase())
+                .orElseThrow(() -> new ShipmentNotFoundException("No existe el envio " + trackingCode));
+        repository.delete(shipment);
+    }
+
+    // ==========================================
+    // MÉTODOS PRIVADOS
+    // ==========================================
+
     private ShipmentResponse toResponse(Shipment shipment) {
         return new ShipmentResponse(
                 shipment.getTrackingCode(),

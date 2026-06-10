@@ -101,6 +101,20 @@ public class OrderService {
         return toResponse(order);
     }
 
+    // ==========================================
+    // NUEVO MÉTODO PARA COMPLETAR EL CRUD
+    // ==========================================
+
+    public void deleteOrder(String orderNumber) {
+        PurchaseOrder order = repository.findByOrderNumber(orderNumber)
+                .orElseThrow(() -> new OrderNotFoundException("Orden no encontrada: " + orderNumber));
+        repository.delete(order);
+    }
+
+    // ==========================================
+    // MÉTODOS PRIVADOS (HELPER)
+    // ==========================================
+
     private PurchaseOrder buildOrder(CreateOrderRequest request) {
         PurchaseOrder order = new PurchaseOrder();
         order.setCustomerName(request.customerName().trim());

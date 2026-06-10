@@ -7,11 +7,14 @@ import com.smartlogix.inventory.service.InventoryService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -90,5 +93,22 @@ public class InventoryController {
             @PathVariable String sku,
             @RequestParam @Min(1) int quantity) {
         return inventoryService.dispatch(sku, quantity);
+    }
+
+    // ==========================================
+    // NUEVOS ENDPOINTS (ACTUALIZAR Y ELIMINAR)
+    // ==========================================
+
+    @PutMapping("/items/{sku}")
+    public InventoryItemResponse updateItem(
+            @PathVariable String sku,
+            @Valid @RequestBody CreateInventoryItemRequest request) {
+        return inventoryService.update(sku, request);
+    }
+
+    @DeleteMapping("/items/{sku}")
+    public ResponseEntity<Void> deleteItem(@PathVariable String sku) {
+        inventoryService.delete(sku);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -108,6 +108,33 @@ public class InventoryService {
         return toResponse(repository.save(item));
     }
 
+    // ==========================================
+    // NUEVOS MÉTODOS PARA COMPLETAR EL CRUD
+    // ==========================================
+
+    // Actualizar (Update)
+    public InventoryItemResponse update(String sku, CreateInventoryItemRequest request) {
+        InventoryItem item = loadBySku(sku);
+
+        // Actualizamos los campos
+        item.setProductName(request.productName().trim());
+        item.setWarehouseCode(request.warehouseCode().trim().toUpperCase());
+        item.setAvailableQuantity(request.initialQuantity());
+        item.setReorderLevel(request.reorderLevel());
+
+        return toResponse(repository.save(item));
+    }
+
+    // Eliminar (Delete)
+    public void delete(String sku) {
+        InventoryItem item = loadBySku(sku);
+        repository.delete(item);
+    }
+
+    // ==========================================
+    // MÉTODOS PRIVADOS (HELPER)
+    // ==========================================
+
     private InventoryItem loadBySku(String sku) {
         return repository.findBySku(sku.trim().toUpperCase())
                 .orElseThrow(() -> new InventoryNotFoundException("No existe inventario para SKU: " + sku));
