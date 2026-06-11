@@ -60,7 +60,7 @@ function OrdersPage() {
         </div>
         <div className="stat-card">
           <h3>Monto Total</h3>
-          <p>${orders.reduce((acc, o) => acc + (o.totalAmount || 0), 0).toFixed(2)}</p>
+          <p>${orders.reduce((acc, o) => acc + (o.totalAmount || 0), 0).toLocaleString("es-CL")}</p>
         </div>
       </section>
 
@@ -72,26 +72,45 @@ function OrdersPage() {
         <table className="inventory-table">
           <thead>
             <tr>
-              <th>ID Órden</th>
-              <th>Cliente</th>
+              <th>N° Órden</th>
+              <th>Estado</th>
+              <th>Tracking (Despacho)</th>
+              <th>Productos (SKU - Cant)</th>
               <th>Fecha Creación</th>
               <th>Monto Total</th>
-              {/* NUEVA COLUMNA */}
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {orders.map((order, index) => (
-              <tr key={order.id || index}>
-                <td className="sku">{order.orderNumber || order.id}</td>
-                <td>{order.customerName || "Cliente General"}</td>
-                {/* Formateo de fecha limpia localizado en español dd/mm/aaaa */}
+            {orders.map((order) => (
+              <tr key={order.orderNumber}>
+                <td className="sku">{order.orderNumber}</td>
+                
+                {/* Mostramos el status que viene del backend */}
+                <td>{order.status}</td>
+                
+                {/* Mostramos el tracking de shipment-service */}
+                <td>{order.trackingCode || "Pendiente"}</td>
+                
+                {/* Mapeo correcto de los productos internos (lines) */}
+                <td>
+                  {order.lines && order.lines.map((line, index) => (
+                    <div key={index}>
+                      {line.sku} <span style={{color: '#00c2ff'}}>(x{line.quantity})</span>
+                    </div>
+                  ))}
+                </td>
+                
+                {/* Formateo de fecha limpia */}
                 <td>{order.createdAt ? new Date(order.createdAt).toLocaleDateString("es-ES") : "Reciente"}</td>
-                <td>${order.totalAmount || 0}</td>
-                {/* NUEVO BOTÓN DE ELIMINAR */}
+                
+                {/* Monto total */}
+                <td>${order.totalAmount ? order.totalAmount.toLocaleString() : '0'}</td>
+                
+                {/* BOTÓN DE ELIMINAR */}
                 <td>
                   <button
-                    style={{ backgroundColor: "#ff4d4f", color: "white", border: "none", padding: "5px 10px", borderRadius: "4px", cursor: "pointer" }}
+                    style={{ backgroundColor: "#ff4d4f", color: "white", border: "none", padding: "5px 10px", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}
                     onClick={() => handleDelete(order.orderNumber)}
                   >
                     Eliminar
@@ -99,6 +118,14 @@ function OrdersPage() {
                 </td>
               </tr>
             ))}
+            
+            {orders.length === 0 && (
+              <tr>
+                <td colSpan="7" style={{ textAlign: "center", padding: "20px" }}>
+                  No hay órdenes registradas.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </section>
