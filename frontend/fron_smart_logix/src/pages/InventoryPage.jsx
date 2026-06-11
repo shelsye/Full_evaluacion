@@ -11,7 +11,7 @@ function InventoryPage() {
   useEffect(() => {
     async function loadInventory() {
       try {
-        // Fuerza una espera mínima de 3 segundos usando Promise.all
+        // Fuerza una espera mínima de 1 segundo usando Promise.all
         const [data] = await Promise.all([
           getInventory(),
           new Promise((resolve) => setTimeout(resolve, 1000))
@@ -38,7 +38,7 @@ function InventoryPage() {
     return (
       <div className="inventory-loading">
         <div className="spinner"></div>
-        <h2>Cargando inventario...</h2>
+        <h2>Sincronizando con Inventory Service...</h2>
       </div>
     );
   }
@@ -47,20 +47,32 @@ function InventoryPage() {
     <div className="inventory-container">
       <Navbar />
 
+      {/* SECCIÓN DE TARJETAS DE ESTADÍSTICAS REFACTORIZADA (PREMIUM) */}
       <section className="inventory-stats" style={{ marginTop: "30px" }}>
         <div className="stat-card">
-          <h3>Total Productos</h3>
+          <h3>📊 Total Productos</h3>
           <p>{items.length}</p>
+          <span style={{ fontSize: '12px', color: '#64748b', display: 'block', marginTop: '4px' }}>
+            Modelos registrados en catálogo
+          </span>
         </div>
+
         <div className="stat-card">
-          <h3>Stock Disponible</h3>
+          <h3>📦 Stock Disponible</h3>
           <p>
             {items.reduce((acc, item) => acc + (item.availableQuantity || 0), 0)}
           </p>
+          <span style={{ fontSize: '12px', color: '#4ade80', display: 'block', marginTop: '4px' }}>
+            ✔ Unidades físicas en estanterías
+          </span>
         </div>
+
         <div className="stat-card">
-          <h3>Bodegas Activas</h3>
+          <h3>🏢 Bodegas Activas</h3>
           <p>{new Set(items.map((item) => item.warehouseCode)).size}</p>
+          <span style={{ fontSize: '12px', color: '#38bdf8', display: 'block', marginTop: '4px' }}>
+            Sincronizadas mediante Eureka
+          </span>
         </div>
       </section>
 
@@ -69,7 +81,7 @@ function InventoryPage() {
           <h2>Inventario Tecnológico</h2>
           <input
             type="text"
-            placeholder="Buscar producto..."
+            placeholder="Buscar por producto o SKU..."
             className="search-input"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -90,12 +102,12 @@ function InventoryPage() {
             {filteredItems.map((item, index) => (
               <tr key={item.id || index}>
                 <td className="sku">{item.sku}</td>
-                <td>{item.productName}</td>
+                <td style={{ fontWeight: "500" }}>{item.productName}</td>
                 <td>{item.warehouseCode}</td>
-                <td>{item.availableQuantity}</td>
+                <td style={{ fontWeight: "600" }}>{item.availableQuantity}</td>
                 <td>
                   <span className={item.availableQuantity > 0 ? "status available" : "status unavailable"}>
-                    {item.availableQuantity > 0 ? "Disponible" : "Sin Stock"}
+                    {item.availableQuantity > 0 ? "● Disponible" : "X Sin Stock"}
                   </span>
                 </td>
               </tr>
